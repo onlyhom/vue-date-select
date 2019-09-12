@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>vue-date-select Demo 1.0</title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="wap-font-scale" content="no">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1,user-scalable=no">
+    <meta name="keywords" content="">  
+    <meta name="description" content="">
+    <link rel="stylesheet" type="text/css" href="css/public.css">
+</head>
+<body>
+
+
+<div class="contain" id="app">
+    <div class="fixWidth">
+        <div class="nav">
+            <h1>vue-date-select Demo</h1>
+        </div>
+        <div class="demo">
+            <vue-date-select :value=dateVal @pick="dateVal=$event" placeholder="请选择日期"></vue-date-select>
+        </div>
+    </div>
+</div>
+
+<script src="js/vue.js" charset="UTF-8"></script>
+<script src="vue-date-select/vue_date_select.js" charset="UTF-8"></script>
+<link rel="stylesheet" type="text/css" href="vue-date-select/vue_date_select.css"></link>
+
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            dateVal: ''
+        },
+        methods: {
+        }
+    });
+</script>
+
+
+
+</body>
+</html>
