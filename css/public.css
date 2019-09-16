@@ -156,7 +156,7 @@ input[type="radio"] {
 }
 
 
-// html {height: 100%;}
+html {height: 100%;}
 body {
   min-width: 320px; 
   max-width: 1920px; 
@@ -177,18 +177,6 @@ body {
 .contain {
   min-height: 400px;
   text-align: center;
-}
-
-.demo input{
-  display: block;
-  width: 100%;
-  height: 40px;
-  border-radius: 5px;
-  border: 1px solid #999;
-  margin-bottom: 20px;
-  text-align: center;
-  font-size: 14px;
-  line-height: 40px;
 }
 
 

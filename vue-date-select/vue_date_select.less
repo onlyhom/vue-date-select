@@ -70,19 +70,17 @@
 			}
 		}
 		.vm-option{
+			position: relative;
 			height: 40px;
 			line-height: 40px;
 			font-size: 20px;
 			color: #454545;
-			transition: background 0.3s;
-		}
-		.vm-option.color-bg{
-			background: rgba(78, 204, 196, 0.2);
 		}
 		.vm-btns{
 			text-align: right;
 			padding: 5px 15px 10px 0px;
 			.vm-btn{
+				position: relative;
 				display: inline-block;
 				color: @color;
 				font-size: 16px;
@@ -90,15 +88,16 @@
 				padding: 7px 13px;
 				pointer-events: auto;
 				margin-left: 5px;
-				transition: background 0.3s;
-				&:hover{
-					background: rgba(78, 204, 196, 0.2);
-				}
-			}
-			.vm-btn.color-btn{
-				background: rgba(78, 204, 196, 0.2);
 			}
 		}
+	}
+	.hover-color-bg{
+		position: absolute;
+		left: 0px;
+		top: 0px;
+		right: 0px;
+		bottom: 0px;
+		opacity: 0;
 	}
 }
 .vue-date-select-container.vm-date-show{

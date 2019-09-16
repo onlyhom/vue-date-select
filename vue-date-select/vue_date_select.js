@@ -1,22 +1,48 @@
-// 全局注册组件
+/*!
+ * vue-date-select
+ * (c) 2019-present onlyhom
+ * Released under the MIT License.
+ */
 
+// 全局注册组件
 Vue.component('vue-date-select', {
     // 选项
-    props: ['value', 'min', 'max', 'placeholder'],
     props: {
-        value: String,
-        min: String,
-        max: String,
+        value: {
+            type: String,
+            default: ''
+        },
+        min: {
+            type: String,
+            default: ''
+        },
+        max: {
+            type: String,
+            default: ''
+        },
         placeholder: {
             type: String,
             default: ''
+        },
+        inputClass: {
+            type: [String, Object, Array],
+            default: ''
+        },
+        inputStyle: {
+            type: [String, Object, Array],
+            default: ''
+        },
+        themeColor: {
+            type: String,
+            default: '#03a9f4'
         }
     },
     template: '<div>'+
-            '<input type="text" readonly="readonly" class="vue-date-input" :placeholder="placeholder" v-model="selectValue" @focus="showPanel"/>'+
+            '<input type="text" readonly="readonly" :class="inputClass" :style="inputStyle" :placeholder="placeholder" v-model="selectValue" @focus="showPanel"/>'+
             '<div class="vue-date-select-container" :class="{\'vm-date-show\': popShow}"'+
                     '@mousemove="handleTouch($event)"'+
                     '@mouseup="handleTouch($event)"'+
+                    '@touchend="clearHover"'+
                 '>'+
                 '<div class="vm-dialog-content" :style="{\'margin-top\': parseInt((windowHeight-260)*0.4)+\'px\'}">'+
                     '<div class="vm-wheels">'+
@@ -28,26 +54,36 @@ Vue.component('vue-date-select', {
                             '@mousewheel="handleTouch($event, wheelIndex)"'+
                             '@DOMMouseScroll="handleTouch($event, wheelIndex)"'+
                         '>'+
-                            '<div class="vm-line"></div>'+
+                            '<div class="vm-line" :style="{borderColor:themeColor}"></div>'+
                             '<div class="vm-items-wrapper" :class="{\'anim\': item.anim}"'+
                                     ':style="{'+
                                         '\'transform\':\'translate3d(0,\'+ item.translateY +\'px, 0)\','+
                                         '\'transition-duration\': item.anim ? item.transitionTime : \'0s\''+
                                     '}">'+
                                 '<div v-for="(optionItem, itemIndex) in item.data"'+
-                                    'class="vm-option" :class="{\'color-bg\': wheelIndex==activeClick.wheelIndex && itemIndex==activeClick.itemIndex}" '+
+                                    'class="vm-option"'+
                                     '@click="handleSingleClick($event, wheelIndex, itemIndex)"'+
                                     '@touchstart="hoverClass($event, wheelIndex, itemIndex)"'+
-                                    '@touchend="hoverClass($event, wheelIndex, itemIndex)"'+
-                                    '@mousedown="hoverClass($event, wheelIndex, itemIndex)"'+
-                                    '@mouseup="hoverClass($event, wheelIndex, itemIndex)"'+
-                                '>{{(optionItem<10? (\'0\'+optionItem) : optionItem)+ (wheelIndex==1?\'月\':\'\')}} </div>'+
+                                    '@mousedown="hoverClass($event, wheelIndex, itemIndex)">'+
+                                        '<div class="hover-color-bg"'+
+                                            ':style="{background:hoverColor, opacity:wheelIndex==activeClick.wheelIndex && itemIndex==activeClick.itemIndex? 1:0 }">'+
+                                        '</div>'+
+                                        '{{(optionItem<10? (\'0\'+optionItem) : optionItem)+ (wheelIndex==1?\'月\':\'\')}}'+
+                                    '</div>'+
                             '</div>'+
                         '</div>'+
                     '</div>'+
                     '<div class="vm-btns">'+
-                        '<div class="vm-btn" @click="hidePanel">取消</div>'+
-                        '<div class="vm-btn" @click="getSelectData">确定</div>'+
+                        '<div class="vm-btn" @click="hidePanel" :style="{color:themeColor}"'+
+                            '@touchstart="hoverClass($event, -1, -1)"'+
+                            '@mousedown="hoverClass($event, -1, -1)">'+
+                            '<i class="hover-color-bg" :style="{background:hoverColor, opacity:activeClick.wheelIndex==-1?1:0}"></i>取消'+
+                        '</div>'+
+                        '<div class="vm-btn" @click="getSelectData" :style="{color:themeColor}"'+
+                            '@touchstart="hoverClass($event, -2, -2)"'+
+                            '@mousedown="hoverClass($event, -2, -2)">'+
+                            '<i class="hover-color-bg" :style="{background:hoverColor, opacity:activeClick.wheelIndex==-2?1:0}"></i>确定'+
+                        '</div>'+
                     '</div>'+
                 '</div>'+
             '</div>'+
@@ -93,26 +129,41 @@ Vue.component('vue-date-select', {
             initDate: '',
             clickFlag: false,
             activeClick: {
-                wheelIndex: -1,
-                itemIndex: -1
+                wheelIndex: -100,
+                itemIndex: -100
             },
             activeWheelIndex: 0,
-            windowHeight: window.screen.availHeight||200
+            windowHeight: document.documentElement.clientHeight || 300
         }
     },
     computed: {
+        hoverColor: function () {
+            var hex = this.themeColor,
+                opacity = 0.08,
+                result = '';
+            if(hex.replace(/\s+/g, '').length === 7){
+                result = 'rgba(' + parseInt('0x' + hex.slice(1, 3)) + ',' +
+                        parseInt('0x' + hex.slice(3, 5)) + ',' +
+                        parseInt('0x' + hex.slice(5, 7)) + ',' + opacity + ')';
+            }else{
+                var rgb = hex.split('(')[1].split(')')[0].split(',');
+                result = 'rgba(' + rgb[0].trim() + ',' + rgb[1].trim() + ',' + rgb[2].trim() + ',' + opacity + ')';
+            }
+            return result||'';
+        }
     },
     mounted: function(){
         this.initSetting();
         this.initOption();
-
-            window.addEventListener("DOMMouseScroll", function(e){
-                console.log('IE滚动~~~');
-            },false);
-
-
+        this.initListener();
     },
     methods:{
+        initListener: function(){
+            var _this = this;
+            window.addEventListener("resize", function(){
+                _this.windowHeight = document.documentElement.clientHeight || 300;
+            },false);
+        },
         initSetting: function(){
             this.initDate =  this.value&&this.checkIsFormatStr(this.value)? this.value : this.getDateStr(new Date());
             this.maxDate = this.max && this.checkIsFormatStr(this.max)? this.max : this.getDateStr(new Date(), 2);
@@ -267,6 +318,7 @@ Vue.component('vue-date-select', {
                         curWheelObj.translateY = this.fixPosition(curWheelObj.translateY + scrollSpeed*250);
                     }
                     this.checkIsOverBorder(curWheelObj);
+                    this.clearHover();
                     break;
 
                 case 'mousemove':
@@ -283,7 +335,7 @@ Vue.component('vue-date-select', {
 
                 case 'mousewheel':
                     curWheelObj.anim = true;
-                    curWheelObj.translateY = this.fixPosition(curWheelObj.translateY-parseInt(e.deltaY*0.4));
+                    curWheelObj.translateY = this.fixPosition(curWheelObj.translateY+parseInt((e.wheelDelta||e.detail)*0.3));
                     this.oversizeBorder = -(curWheelObj.data.length-3)*this.liHeight; 
                     this.checkIsOverBorder(curWheelObj);
                     break;
@@ -299,18 +351,12 @@ Vue.component('vue-date-select', {
             }
         },
         hoverClass: function(e, wheelIndex, itemIndex){
-            switch (e.type){
-                case 'touchstart':
-                case 'mousedown':
-                    this.activeClick.wheelIndex = wheelIndex;
-                    this.activeClick.itemIndex = itemIndex;
-                    break;
-                case 'touchend':
-                case 'mouseup':
-                    this.activeClick.wheelIndex = -1;
-                    this.activeClick.itemIndex = -1;
-                    break;
-            }
+            this.activeClick.wheelIndex = wheelIndex;
+            this.activeClick.itemIndex = itemIndex;
+        },
+        clearHover: function(){
+            this.activeClick.wheelIndex = -100;
+            this.activeClick.itemIndex = -100;
         },
         getSelectData: function(){
             var _this = this;
@@ -319,10 +365,11 @@ Vue.component('vue-date-select', {
                 tempArr.push(_this.addPrefix(_this.getWheelData(wheelIndex)));
             });
             this.selectValue = tempArr.join('-');
-            this.$emit('pick', this.selectValue);
+            this.$emit('input', this.selectValue);
             this.hidePanel();
         },
         hidePanel: function(){
+            this.clearHover();
             this.popShow = false;
             // 关闭后 复位已选中的值
             if(this.selectValue){
@@ -330,8 +377,8 @@ Vue.component('vue-date-select', {
             }
         },
         showPanel: function(){
+            this.clearHover();
             this.popShow = true;
         },
     }
 });
-

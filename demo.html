@@ -2,7 +2,7 @@
 <html lang="zh-cn">
 <head>
     <meta charset="UTF-8">
-    <title>vue-date-select Demo 1.0</title>
+    <title>vue-date-select Demo</title>
     <meta name="renderer" content="webkit|ie-comp|ie-stand">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="wap-font-scale" content="no">
@@ -10,6 +10,20 @@
     <meta name="keywords" content="">  
     <meta name="description" content="">
     <link rel="stylesheet" type="text/css" href="css/public.css">
+    <style>
+        .vue-date-input{
+            display: block;
+            width: 100%;
+            height: 40px;
+            border-radius: 5px;
+            border: 1px solid #999;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+            cursor: pointer;
+            line-height: 40px;
+        }
+    </style>
 </head>
 <body>
 
@@ -20,7 +34,16 @@
             <h1>vue-date-select Demo</h1>
         </div>
         <div class="demo">
-            <vue-date-select :value=dateVal @pick="dateVal=$event" placeholder="请选择日期"></vue-date-select>
+            <vue-date-select 
+                placeholder="请选择日期" 
+                v-model="dateVal"
+                :theme-color="'#2196f3'"
+                :min="'2000-01-01'"
+                :max="'2030-01-01'"
+                :input-class="'vue-date-input'" 
+                :input-style="{color:'#333333'}" 
+            >
+            </vue-date-select>
         </div>
     </div>
 </div>
@@ -39,8 +62,6 @@
         }
     });
 </script>
-
-
 
 </body>
 </html>
