@@ -2,7 +2,7 @@
 # vue-date-select
 A mobile datetime picker/selector based on Vue.js, also friendly to PC. Similar to IOS, Mobiscroll scroll selection mode.
 
-[【查看中文文档】](https://github.com/onlyhom/mobileSelect.js/blob/master/docs/README-CN.md)
+[【查看中文文档】](https://github.com/onlyhom/vue-date-select/blob/master/docs/README-CN.md)
 
 ## Preview
 
