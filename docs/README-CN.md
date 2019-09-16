@@ -1,15 +1,16 @@
 
 # vue-date-select
 基于vue的一款移动端时间选择器，同时对PC端兼容友好，类似于ios、mobiscroll滚动方式选择。
-[【English documents】](https://github。com/onlyhom/vue-date-select)
+
+[【English documents】](https://github.com/onlyhom/vue-date-select)
 
 ## 演示
 
 #### 手机扫描二维码预览:
-<img src="https://raw。githubusercontent。com/onlyhom/onlyhom。github。io/master/vue-date-select/code。png?raw=true" width="230">
+<img src="https://raw.githubusercontent.com/onlyhom/onlyhom.github.io/master/vue-date-select/code.png?raw=true" width="230">
 
 #### Gif preview:
-![](https://raw。githubusercontent。com/onlyhom/onlyhom。github。io/master/vue-date-select/demo。gif)
+![](https://raw.githubusercontent.com/onlyhom/onlyhom.github.io/master/vue-date-select/demo.gif)
 
 ## 参数
 
